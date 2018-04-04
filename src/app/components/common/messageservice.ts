@@ -6,7 +6,7 @@ import { Message } from './message';
 @Injectable()
 export class MessageService {
     
-    private messageSource = new Subject<Message>();
+    private messageSource = new Subject<Message|Message[]>();
     
     messageObserver = this.messageSource.asObservable();
     
@@ -20,5 +20,9 @@ export class MessageService {
         if(messages && messages.length) {
             this.messageSource.next(messages);
         } 
+    }
+    
+    clear() {
+        this.messageSource.next(null);
     }
 }

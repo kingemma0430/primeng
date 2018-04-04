@@ -19,7 +19,8 @@
     </div>
     
     <h3>Message Service</h3>
-    <button type="button" pButton (click)="showViaService()" label="Use Service"></button>
+    <button type="button" pButton (click)="showViaService()" label="Add with Service"></button>
+    <button type="button" pButton (click)="clearViaService()" label="Clear with Service"></button>
 </div>
 
 <div class="content-section documentation">
@@ -28,13 +29,13 @@
             <h3>Import</h3>
 <pre>
 <code class="language-typescript" pCode ngNonBindable>
-import &#123;GrowlModule&#125; from 'primeng/primeng';
+import &#123;GrowlModule&#125; from 'primeng/growl';
 </code>
 </pre>
 
             <h3>Getting Started</h3>
-            <p>A single message is specified by Message interface in PrimeNG that defines the id, severity, summary and detail as properties.
-            Messages to display on growl can either be defined using the value property which should an array of Message instances or using 
+            <p>A single message is specified by the Message interface in PrimeNG that defines the id, severity, summary and detail as properties.
+            Messages to display on growl can either be defined using the value property which should be an array of Message instances or using 
             a MessageService.</p>
 <pre>
 <code class="language-markup" pCode ngNonBindable>
@@ -44,7 +45,7 @@ import &#123;GrowlModule&#125; from 'primeng/primeng';
 
 <pre>
 <code class="language-typescript" pCode ngNonBindable>
-import &#123;Message&#125; from 'primeng/primeng';
+import &#123;Message&#125; from 'primeng/api';
 
 export class MyModel &#123;
 
@@ -56,8 +57,9 @@ export class MyModel &#123;
             
             <h3>Message Service</h3>
             <p>MessageService allows having one growl in the entire application instead of having separate ones in each component that uses it.
-            In order to use this service, import the class and define it as a provider in a component higher up in the component tree such as application instance itself 
-            so that descandant components can have it injected.</p>
+            In order to use this service, import the class and define it as a provider in a component higher up in the component tree such as the application instance itself 
+            so that descandant components can have it injected. If there are multiple growl components having the same message service, you may use key property of the component
+            to match the key of the message to implement scoping.</p>
 <pre>
 <code class="language-typescript" pCode ngNonBindable>
 import &#123;MessageService&#125; from 'primeng/components/common/messageservice';
@@ -82,8 +84,12 @@ export class MessageServiceDemo &#123;
     &#125;
     
     addMultiple() &#123;
-        this.messageService.addAdd([&#123;severity:'success', summary:'Service Message', detail:'Via MessageService'&#125;,
+        this.messageService.addAll([&#123;severity:'success', summary:'Service Message', detail:'Via MessageService'&#125;,
                                     &#123;severity:'info', summary:'Info Message', detail:'Via MessageService'&#125;]);
+    &#125;
+    
+    clear() &#123;
+        this.messageService.clear();
     &#125;
 &#125;
 </code>
@@ -180,6 +186,24 @@ clear() &#123;
                             <td>true</td>
                             <td>Defines how the messages data should be manipulated.</td>
                         </tr>
+                        <tr>
+                            <td>baseZIndex</td>
+                            <td>number</td>
+                            <td>0</td>
+                            <td>Base zIndex value to use in layering.</td>
+                        </tr>
+                        <tr>
+                            <td>autoZIndex</td>
+                            <td>boolean</td>
+                            <td>true</td>
+                            <td>Whether to automatically manage layering.</td>
+                        </tr>
+                        <tr>
+                            <td>key</td>
+                            <td>string</td>
+                            <td>null</td>
+                            <td>Id to match the key of the message to enable scoping in service based messaging.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -204,6 +228,11 @@ clear() &#123;
                             <td>onClick</td>
                             <td>message: Clicked message</td>
                             <td>Callback to invoke when a message is clicked.</td>
+                        </tr>
+                        <tr>
+                            <td>onHover</td>
+                            <td>message: Hovered message</td>
+                            <td>Callback to invoke when mouse enters a message.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -276,7 +305,8 @@ clear() &#123;
 &lt;/div&gt;
 
 &lt;h3&gt;Message Service&lt;/h3&gt;
-&lt;button type="button" pButton (click)="showViaService()" label="Use Service"&gt;&lt;/button&gt;
+&lt;button type="button" pButton (click)="showViaService()" label="Add with Service"&gt;&lt;/button&gt;
+&lt;button type="button" pButton (click)="clearViaService()" label="Clear with Service"&gt;&lt;/button&gt;
 </code>
 </pre>
 
@@ -326,6 +356,10 @@ export class GrowlDemo &#123;
     
     showViaService() &#123;
         this.messageService.add(&#123;severity:'success', summary:'Service Message', detail:'Via MessageService'&#125;);
+    &#125;
+    
+    clearViaService() &#123;
+        this.messageService.clear();
     &#125;
 
     clear() &#123;

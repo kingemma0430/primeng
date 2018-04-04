@@ -89,6 +89,8 @@ export class Schedule implements DoCheck,OnDestroy,OnInit,OnChanges,AfterViewChe
     
     @Input() dayRender: Function;
     
+    @Input() navLinks: boolean;
+    
     @Input() options: any;
     
     @Output() onDayClick: EventEmitter<any> = new EventEmitter();
@@ -172,6 +174,7 @@ export class Schedule implements DoCheck,OnDestroy,OnInit,OnChanges,AfterViewChe
             eventConstraint: this.eventConstraint,
             eventRender: this.eventRender,
             dayRender: this.dayRender,
+            navLinks: this.navLinks,
             dayClick: (date, jsEvent, view) => {
                 this.onDayClick.emit({
                     'date': date,
@@ -303,7 +306,9 @@ export class Schedule implements DoCheck,OnDestroy,OnInit,OnChanges,AfterViewChe
     initialize() {
         this.schedule = jQuery(this.el.nativeElement.children[0]);
         this.schedule.fullCalendar(this.config);
-        this.schedule.fullCalendar('addEventSource', this.events);
+        if(this.events) {
+            this.schedule.fullCalendar('addEventSource', this.events);
+        }
         this.initialized = true;
     }
      
@@ -312,7 +317,10 @@ export class Schedule implements DoCheck,OnDestroy,OnInit,OnChanges,AfterViewChe
         
         if(this.schedule && changes) {
             this.schedule.fullCalendar('removeEventSources');
-            this.schedule.fullCalendar('addEventSource', this.events);
+            
+            if(this.events) {
+                this.schedule.fullCalendar('addEventSource', this.events);
+            }
         }
     }
 
